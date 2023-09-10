@@ -1,6 +1,7 @@
 package app
 
 import (
+	"bytes"
 	"html/template"
 	"io/fs"
 	"log"
@@ -55,4 +56,13 @@ func (app *Application) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (app *Application) GracefulShutdown() {
 	app.rdb.Close()
 	log.Println("Disconnected from Redis")
+}
+
+func (app *Application) renderLayout(w http.ResponseWriter, title, name string, data any) {
+	content := new(bytes.Buffer)
+	app.views.ExecuteTemplate(content, name, data)
+	app.views.ExecuteTemplate(w, "layout.html", map[string]any{
+		"Content": template.HTML(content.String()),
+		"Title":   title,
+	})
 }

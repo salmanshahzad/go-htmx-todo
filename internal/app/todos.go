@@ -1,8 +1,6 @@
 package app
 
 import (
-	"bytes"
-	"html/template"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -32,13 +30,7 @@ func (app *Application) handleTodosView(w http.ResponseWriter, r *http.Request) 
 		data["Todos"] = todos
 	}
 
-	todosView := new(bytes.Buffer)
-	app.views.ExecuteTemplate(todosView, "todos.html", data)
-
-	app.views.ExecuteTemplate(w, "layout.html", map[string]any{
-		"Content": template.HTML(todosView.String()),
-		"Title":   "Todos",
-	})
+	app.renderLayout(w, "Todos", "todos.html", data)
 }
 
 func (app *Application) handleCreateTodo(w http.ResponseWriter, r *http.Request) {
