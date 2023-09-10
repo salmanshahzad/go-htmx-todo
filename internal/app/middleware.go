@@ -10,6 +10,7 @@ func (app *Application) verifyAuth(next http.Handler) http.Handler {
 		if userId == 0 {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 		} else {
+			app.sm.RenewToken(r.Context())
 			next.ServeHTTP(w, r)
 		}
 	})
