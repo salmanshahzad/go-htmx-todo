@@ -1,0 +1,66 @@
+<section hx-target="this">
+  <h1 class="font-bold text-4xl">
+    Sign {{if .IsSignUp}} Up {{else}} In {{end}}
+  </h1>
+  {{if .Error}}
+  <div class="alert alert-error">{{.Error}}</div>
+  {{end}}
+  <form
+    hx-post="{{if .IsSignUp}} /user {{else}} /session {{end}}"
+    hx-swap="outerHTML"
+  >
+    <div class="form-control w-full max-w-xs">
+      <label class="label">
+        <span class="label-text">Username</span>
+      </label>
+      <input
+        type="text"
+        class="input input-bordered {{if .UsernameError}} input-error {{end}} w-full max-w-xs"
+        name="username"
+        value="{{.Username}}"
+      />
+      {{if .UsernameError}}
+      <label class="label">
+        <span class="label-text-alt text-error">{{.UsernameError}}</span>
+      </label>
+      {{end}}
+    </div>
+    <div class="form-control w-full max-w-xs">
+      <label class="label">
+        <span class="label-text">Password</span>
+      </label>
+      <input
+        type="password"
+        class="input input-bordered {{if .PasswordError}} input-error {{end}} w-full max-w-xs"
+        name="password"
+        value="{{.Password}}"
+      />
+      {{if .PasswordError}}
+      <label class="label">
+        <span class="label-text-alt text-error">{{.PasswordError}}</span>
+      </label>
+      {{end}}
+    </div>
+    {{if .IsSignUp}}
+    <div class="form-control w-full max-w-xs">
+      <label class="label">
+        <span class="label-text">Confirm Password</span>
+      </label>
+      <input
+        type="password"
+        class="input input-bordered {{if .ConfirmPasswordError}} input-error {{end}} w-full max-w-xs"
+        name="confirmPassword"
+        value="{{.ConfirmPassword}}"
+      />
+      {{if .ConfirmPasswordError}}
+      <label class="label">
+        <span class="label-text-alt text-error">{{.ConfirmPasswordError}}</span>
+      </label>
+      {{end}}
+    </div>
+    {{end}}
+    <button class="btn btn-primary">
+      Sign {{if .IsSignUp}} Up {{else}} In {{end}}
+    </button>
+  </form>
+</section>

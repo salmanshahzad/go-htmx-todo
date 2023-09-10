@@ -1,0 +1,38 @@
+<div class="flex justify-between">
+  <h1 class="font-bold text-4xl">Todos</h1>
+  <button class="btn btn-primary" hx-delete="/session">Sign Out</button>
+</div>
+<div class="alert alert-error" x-data x-show="$store.todosError.error" x-text="$store.todosError.error"></div>
+<form
+  hx-post="/todos"
+  hx-swap="beforeend"
+  hx-target="#todos"
+  hx-on::after-request="this.reset()"
+>
+  <input
+    type="text"
+    name="name"
+    placeholder="Add todo"
+    class="input input-bordered w-full"
+  />
+</form>
+<div id="todos">{{range .Todos}} {{template "todoItem.html" .}} {{end}}</div>
+<script>
+  document.addEventListener("alpine:init", () => {
+    Alpine.store("todosError", {
+      error: "",
+      setError(error) {
+        this.error = error;
+      },
+    });
+
+    document.addEventListener("htmx:afterRequest", (e) => {
+      if (!e.detail.requestConfig.path.startsWith("/todos")) return;
+      if (e.detail.failed) {
+        Alpine.store("todosError").setError(e.detail.xhr.responseText);
+      } else {
+        Alpine.store("todosError").setError("");
+      }
+    });
+  });
+</script>

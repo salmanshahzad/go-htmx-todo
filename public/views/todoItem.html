@@ -1,0 +1,73 @@
+<div x-data="{ editing: false }">
+  <div
+    class="flex justify-between"
+    hx-swap="outerHTML"
+    hx-target="this"
+    x-show="!editing"
+  >
+    <div class="flex items-center gap-4">
+      <div class="form-control">
+        <label class="label cursor-pointer">
+          <input
+            type="checkbox"
+            {{if
+            .Completed}}
+            checked
+            {{end}}
+            autocomplete="off"
+            class="checkbox checkbox-primary"
+            hx-put="/todos/{{.ID}}/complete"
+            hx-vals='{"completed": {{not .Completed}}}'
+          />
+        </label>
+      </div>
+      <div class="{{if .Completed}} line-through {{end}}">{{.Name}}</div>
+    </div>
+    <div>
+      <button class="btn btn-info" x-on:click="editing = true">Edit</button>
+      <button class="btn btn-error" hx-delete="/todos/{{.ID}}" hx-swap="delete">
+        Delete
+      </button>
+    </div>
+  </div>
+  <form
+    class="flex justify-between"
+    hx-put="/todos/{{.ID}}/name"
+    hx-swap="outerHTML"
+    hx-target="this"
+    x-show="editing"
+  >
+    <div class="flex items-center gap-4 flex-1">
+      <div class="form-control">
+        <label class="label cursor-pointer">
+          <input
+            type="checkbox"
+            {{if
+            .Completed}}
+            checked
+            {{end}}
+            autocomplete="off"
+            class="checkbox checkbox-primary"
+            disabled
+          />
+        </label>
+      </div>
+      <input
+        type="text"
+        class="input input-bordered w-full"
+        name="name"
+        value="{{.Name}}"
+      />
+    </div>
+    <div>
+      <button
+        type="button"
+        class="btn btn-secondary"
+        x-on:click="editing = false"
+      >
+        Cancel
+      </button>
+      <button class="btn btn-primary">Save</button>
+    </div>
+  </form>
+</div>
