@@ -26,6 +26,9 @@ import (
 	"github.com/salmanshahzad/go-htmx-todo/internal/utils"
 )
 
+//go:embed internal/database/migrations
+var migrations embed.FS
+
 //go:embed public
 var public embed.FS
 
@@ -70,6 +73,7 @@ func connectToPostgres(env *utils.Environment) *database.Queries {
 	if err := goose.SetDialect("postgres"); err != nil {
 		log.Fatalf("Error setting goose dialect: %v", err)
 	}
+	goose.SetBaseFS(migrations)
 	if err := goose.Up(db, "internal/database/migrations"); err != nil && !errors.Is(err, goose.ErrNoMigrationFiles) {
 		log.Fatalf("Error performing database migrations: %v", err)
 	}
