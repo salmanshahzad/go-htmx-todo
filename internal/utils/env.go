@@ -2,6 +2,7 @@ package utils
 
 import (
 	"context"
+	"os"
 
 	"github.com/joho/godotenv"
 	"github.com/sethvargo/go-envconfig"
@@ -20,7 +21,7 @@ type Environment struct {
 }
 
 func InitEnv() (*Environment, error) {
-	if err := godotenv.Load(); err != nil {
+	if err := godotenv.Load(); err != nil && os.Getenv("PRODUCTION") != "true" {
 		return nil, err
 	}
 
